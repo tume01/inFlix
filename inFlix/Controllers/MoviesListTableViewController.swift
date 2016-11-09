@@ -7,11 +7,21 @@
 //
 
 import UIKit
+enum Filter: String {
+    case actor = "Actor"
+    case title = "Tittle"
+    case director = "Director"
+}
 
 class MoviesListTableViewController: UITableViewController {
 
     let searchController = UISearchController(searchResultsController: nil)
     var filteredMovies = [Movie]()
+    let filters = [
+        Filter.actor.rawValue,
+        Filter.title.rawValue,
+        Filter.director.rawValue
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +39,11 @@ class MoviesListTableViewController: UITableViewController {
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
+        
+        searchController.searchBar.scopeButtonTitles = filters
+        searchController.searchBar.barTintColor = UIColor.darkGray
+        searchController.searchBar.tintColor = UIColor.red
+        searchController.searchBar.delegate = self
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -58,11 +73,21 @@ class MoviesListTableViewController: UITableViewController {
         if searchController.isActive && searchController.searchBar.text != "" {
             movie = filteredMovies[indexPath.row]
             cell.detailMovie = movie
+            
+            NetworkManager.sharedInstance().getDataFromUrl(url: URL(string: movie.posterURL)!) {
+                networkResult in
+                switch networkResult {
+                case .success(let result):
+                    cell.movieImage.image = UIImage(data: result as! Data)
+                case .error(let error):
+                    print(error)
+                }
+            
+            }
         }
         
         return cell
     }
- 
 
     /*
     // Override to support conditional editing of the table view.
@@ -110,28 +135,72 @@ class MoviesListTableViewController: UITableViewController {
     */
     
     
-    func filterContentForSearchText(searchText: String, scope: String = "All") {
+    func filterContentForSearchText(searchText: String, scope: String = "Tittle") {
+        let scopeFilter: Filter = Filter(rawValue: scope)!
+        let scope: String
+        
+        switch scopeFilter {
+        case .actor:
+            scope = "actor"
+        case .title:
+            scope = "title"
+        case .director:
+            scope = "director"
+        }
+        
         let filters = [
-            "director": "Quentin Tarantino"
+            scope: searchText
         ]
         
         MoviesService.sharedInstance().getMovies(filters: filters) {
             networkResult in
             DispatchQueue.main.async {
+                self.filteredMovies = []
                 switch networkResult {
                 case .success(let result):
                     self.filteredMovies = result as! [Movie]
                 case .error(let error):
                     print(error)
                 }
+                self.tableView.reloadData()
             }
         }
+    }
+    
+    func cleanSearch() {
+        filteredMovies = []
         tableView.reloadData()
     }
 }
 
 extension MoviesListTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        filterContentForSearchText(searchText: searchController.searchBar.text!)
+        let searchBar = searchController.searchBar
+        let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
+        if(searchBar.text != "") {
+            filterContentForSearchText(searchText: searchController.searchBar.text!, scope: scope)
+        }
+    }
+}
+
+extension MoviesListTableViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        cleanSearch()
+        if(searchBar.text != "") {
+            filterContentForSearchText(searchText: searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
+        }
+    }
+}
+
+extension MoviesListTableViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDetail" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                let movie = filteredMovies[indexPath.row]
+                let controller = segue.destination as! MovieViewController
+                controller.detailMovie = movie
+                controller.navigationItem.leftItemsSupplementBackButton = true
+            }
+        }
     }
 }

@@ -19,6 +19,7 @@ class MovieListTableViewCell: UITableViewCell {
     @IBOutlet weak var movieTittle: UILabel!
     @IBOutlet weak var movieDetail: UILabel!
     @IBOutlet weak var movieImage: UIImageView!
+    @IBOutlet weak var movieDirector: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -39,7 +40,13 @@ class MovieListTableViewCell: UITableViewCell {
                 let movieImage = movieImage {
                 movieTittle.text = detailMovie.showTittle
                 movieDetail.text = detailMovie.releaseYear
+                movieDirector.text = detailMovie.director
             }
         }
     }
+
+    @IBAction func saveFavorite(_ sender: Any) {
+        MoviesService.sharedInstance().addFavoriteMovie(movie: detailMovie!)
+    }
+    
 }

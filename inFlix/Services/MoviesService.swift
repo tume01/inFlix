@@ -15,6 +15,11 @@ class MoviesService {
         }
         return Singleton.sharedInstance
     }
+    var favoriteMovies = [Movie]()
+    
+    init() {
+        favoriteMovies = (NSKeyedUnarchiver.unarchiveObject(withFile: Movie.ArchiveURL.path) as? [Movie]) ?? [Movie]()
+    }
     
     func getMovies(filters: [String:String], completionHandler: @escaping (_ result: NetworkResult<Any>) -> Void) {
         var movies = [Movie]()
@@ -25,7 +30,14 @@ class MoviesService {
             
             switch networkResult {
             case .success(let result):
-                for(value) in (result as! [[String: Any]]) {
+                var results = [[String: Any]]()
+                if let movies = result as? [[String: Any]] {
+                    results += movies
+                }else if let movie = result as? [String: Any] {
+                    results.append(movie)
+                }
+                
+                for value in results {
                     if let movie = Movie(json: value) {
                         movies.append(movie)
                     }
@@ -37,6 +49,24 @@ class MoviesService {
         }
         
         task.resume()
+    }
+    
+    func addFavoriteMovie(movie: Movie) {
+        if (!favoriteMovies.contains(movie)) {
+            favoriteMovies.append(movie)
+            saveFavoriteMovies()
+        }
+    }
+    
+    func removeFavoriteMovie(movie: Movie) {
+        favoriteMovies.remove(at: favoriteMovies.index(of: movie)!)
+        saveFavoriteMovies()
+    }
+    
+    func saveFavoriteMovies() {
+        do {
+            if !NSKeyedArchiver.archiveRootObject(favoriteMovies, toFile: Movie.ArchiveURL.path) { print("error") }
+        }catch { print("error") }
     }
 }
 

@@ -9,7 +9,7 @@
 import Foundation
 
 class JSONParser {
-    static let domain = "com.opear.Opear"
+    static let domain = "com.tk.inFlix"
     static let codeRefreshToken = 1
     
     static func errorFromJSON (_ jsonObject: Any?) -> Error? {
@@ -36,6 +36,13 @@ class JSONParser {
             let userInfo = [NSLocalizedDescriptionKey: errorMessage ]
             
             return NSError(domain: domain, code: -1, userInfo: userInfo)
+        }else if let errorCode = jsonDictionary["errorcode"] as? Int,
+            let errorMessage = jsonDictionary["message"] as? String {
+            var userInfo = [String : AnyObject]()
+            
+            userInfo[NSLocalizedDescriptionKey] = errorMessage as AnyObject?
+            
+            return NSError(domain: domain, code: errorCode, userInfo: userInfo)
         }
         
         if let refreshTokenValue = jsonDictionary["refresh-token"] as? String {

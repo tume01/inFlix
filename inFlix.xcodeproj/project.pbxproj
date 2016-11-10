@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7512ABAB1DD50C4D004335CC /* PosterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7512ABAA1DD50C4D004335CC /* PosterViewController.swift */; };
 		753010851DD251E5008B66FB /* FavoriteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753010841DD251E5008B66FB /* FavoriteCollectionViewController.swift */; };
 		753010871DD2534C008B66FB /* FavoriteMovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753010861DD2534C008B66FB /* FavoriteMovieCollectionViewCell.swift */; };
 		759647781DD0EC6900243476 /* MovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759647771DD0EC6900243476 /* MovieViewController.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7512ABAA1DD50C4D004335CC /* PosterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PosterViewController.swift; sourceTree = "<group>"; };
 		753010841DD251E5008B66FB /* FavoriteCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteCollectionViewController.swift; sourceTree = "<group>"; };
 		753010861DD2534C008B66FB /* FavoriteMovieCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteMovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		759647771DD0EC6900243476 /* MovieViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MovieViewController.swift; path = ../Views/MovieViewController.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				759647771DD0EC6900243476 /* MovieViewController.swift */,
 				75EDB9AC1DCCECB600021B13 /* MoviesListTableViewController.swift */,
 				753010841DD251E5008B66FB /* FavoriteCollectionViewController.swift */,
+				7512ABAA1DD50C4D004335CC /* PosterViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -253,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				759647781DD0EC6900243476 /* MovieViewController.swift in Sources */,
+				7512ABAB1DD50C4D004335CC /* PosterViewController.swift in Sources */,
 				75EDB9BB1DCD085700021B13 /* NetworkManager.swift in Sources */,
 				75EDB9BC1DCD085700021B13 /* NetworkResult.swift in Sources */,
 				75EDB9BF1DCD08F400021B13 /* MoviesService.swift in Sources */,

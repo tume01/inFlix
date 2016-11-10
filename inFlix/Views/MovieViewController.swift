@@ -25,6 +25,7 @@ class MovieViewController: UIViewController {
     }
     
     func setupView() {
+        self.view.backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
         if let detailMovie = self.detailMovie {
             if let titleLabel = titleLabel,
                 let directorLabel = directorLabel,

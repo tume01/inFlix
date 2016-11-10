@@ -31,24 +31,13 @@ class FavoriteMovieCollectionViewCell: UICollectionViewCell {
     }
     
     func configureView() {
+        backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
         if let favoriteMovie = favoriteMovie {
             if let titleText = titleText,
                 let yearLabel = yearLabel,
                 let moviePoster = moviePoster{
-                
                 titleText.text = favoriteMovie.showTittle
                 yearLabel.text = favoriteMovie.releaseYear
-                
-                NetworkManager.sharedInstance().getDataFromUrl(url: URL(string: favoriteMovie.posterURL)!) {
-                    networkResult in
-                    switch networkResult {
-                    case .success(let result):
-                        moviePoster.image = UIImage(data: result as! Data)
-                    case .error(let error):
-                        print(error)
-                    }
-                    
-                }
             }
         }
     }

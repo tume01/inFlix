@@ -14,7 +14,8 @@ enum Filter: String {
 }
 
 class MoviesListTableViewController: UITableViewController {
-
+    
+    let backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
     let searchController = UISearchController(searchResultsController: nil)
     var filteredMovies = [Movie]()
     let filters = [
@@ -23,15 +24,35 @@ class MoviesListTableViewController: UITableViewController {
         Filter.director.rawValue
     ]
     
+    var activityIndicator = UIActivityIndicatorView()
+    
+    var cachedImages = NSCache<NSString, UIImage>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setUpView()
+        setUpActivityIndicator()
         setUpSearchController()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    
+    func setUpView() {
+        self.tableView.backgroundColor = backgroundColor
+    }
+    
+    func setUpActivityIndicator() {
+        activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        activityIndicator.color = UIColor(red:0.73, green:0.04, blue:0.04, alpha:1.0)
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.stopAnimating()
+        self.view.addSubview(activityIndicator)
     }
     
     func setUpSearchController() {
@@ -41,8 +62,8 @@ class MoviesListTableViewController: UITableViewController {
         tableView.tableHeaderView = searchController.searchBar
         
         searchController.searchBar.scopeButtonTitles = filters
-        searchController.searchBar.barTintColor = UIColor.darkGray
-        searchController.searchBar.tintColor = UIColor.red
+        searchController.searchBar.barTintColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
+        searchController.searchBar.tintColor = UIColor(red:0.73, green:0.04, blue:0.04, alpha:1.0)
         searchController.searchBar.delegate = self
     }
     override func didReceiveMemoryWarning() {
@@ -73,19 +94,30 @@ class MoviesListTableViewController: UITableViewController {
         if searchController.isActive && searchController.searchBar.text != "" {
             movie = filteredMovies[indexPath.row]
             cell.detailMovie = movie
+            cell.delegate = self
             
-            NetworkManager.sharedInstance().getDataFromUrl(url: URL(string: movie.posterURL)!) {
-                networkResult in
-                switch networkResult {
-                case .success(let result):
-                    cell.movieImage.image = UIImage(data: result as! Data)
-                case .error(let error):
-                    print(error)
+            if let cachedImage = cachedImages.object(forKey: movie.posterURL as NSString) {
+                cell.movieImage.image = cachedImage
+            }else {
+                NetworkManager.sharedInstance().getDataFromUrl(url: URL(string: movie.posterURL)!) {
+                    networkResult in
+                    switch networkResult {
+                    case .success(let result):
+                        if let posterImage = UIImage(data: result as! Data) {
+                            cell.movieImage.image = posterImage
+                            self.cachedImages.setObject(posterImage, forKey: movie.posterURL as NSString)
+                        }else {
+                            cell.movieImage.image = #imageLiteral(resourceName: "noImage")
+                        }
+                    case .error(let error):
+                        print(error)
+                        cell.movieImage.image = #imageLiteral(resourceName: "noImage")
+                    }
                 }
-            
             }
+            
         }
-        
+        cell.movieImage.contentMode = UIViewContentMode.scaleAspectFill
         return cell
     }
 
@@ -152,10 +184,12 @@ class MoviesListTableViewController: UITableViewController {
             scope: searchText
         ]
         
+        activityIndicator.startAnimating()
         MoviesService.sharedInstance().getMovies(filters: filters) {
             networkResult in
             DispatchQueue.main.async {
                 self.filteredMovies = []
+                self.activityIndicator.stopAnimating()
                 switch networkResult {
                 case .success(let result):
                     self.filteredMovies = result as! [Movie]
@@ -168,7 +202,7 @@ class MoviesListTableViewController: UITableViewController {
     }
     
     func cleanSearch() {
-        filteredMovies = []
+        filteredMovies.removeAll()
         tableView.reloadData()
     }
 }
@@ -202,5 +236,29 @@ extension MoviesListTableViewController {
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
+    }
+}
+
+extension MoviesListTableViewController: MoviesListTableViewCellDelegate {
+    func MovieListTableViewCellDidPressButton(_ movieCell: MovieListTableViewCell) {
+        
+        let newState = !movieCell.favoriteButton.isSelected
+        
+        if(newState) {
+            MoviesService.sharedInstance().addFavoriteMovie(movie: movieCell.detailMovie!)
+        }else {
+            MoviesService.sharedInstance().removeFavoriteMovie(movie: movieCell.detailMovie!)
+        }
+        
+        UIView.animate(withDuration: 0.1 ,
+                       animations: {
+                        movieCell.favoriteButton.transform = CGAffineTransform(scaleX: 0, y: 0)
+        },
+                       completion: { finish in
+                        UIView.animate(withDuration: 0.2){
+                            movieCell.favoriteButton.isSelected = newState
+                            movieCell.favoriteButton.transform = CGAffineTransform.identity
+                        }
+        })
     }
 }

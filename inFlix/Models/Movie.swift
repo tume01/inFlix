@@ -21,6 +21,7 @@ struct PropertyKey {
     static let posterURLKey = "posterURL"
     static let mediaTypeKey = "mediaType"
     static let runtimeKey = "runtime"
+    static let isFavoriteKey = "isFavorite"
 }
 
 class Movie: NSObject, NSCoding {
@@ -36,8 +37,9 @@ class Movie: NSObject, NSCoding {
     let posterURL: String
     let mediaType: Int
     let runtime: String
+    var isFavorite: Bool = false
     
-    init(unit: Int, showId: Int, showTittle: String, releaseYear: String, rating: String, category: String, showCast: String, director: String, summary: String, posterURL: String, mediaType: Int, runtime: String) {
+    init(unit: Int, showId: Int, showTittle: String, releaseYear: String, rating: String, category: String, showCast: String, director: String, summary: String, posterURL: String, mediaType: Int, runtime: String, isFavorite: Bool) {
         self.unit = unit
         self.showId = showId
         self.showTittle = showTittle
@@ -50,7 +52,7 @@ class Movie: NSObject, NSCoding {
         self.posterURL = posterURL
         self.mediaType = mediaType
         self.runtime = runtime
-        
+        self.isFavorite = isFavorite
         super.init()
     }
     
@@ -66,11 +68,12 @@ class Movie: NSObject, NSCoding {
             let summary = aDecoder.decodeObject(forKey: PropertyKey.summaryKey) as? String,
             let posterURL = aDecoder.decodeObject(forKey: PropertyKey.posterURLKey) as? String,
             let mediaType = aDecoder.decodeInteger(forKey: PropertyKey.mediaTypeKey) as? Int,
-            let runtime = aDecoder.decodeObject(forKey: PropertyKey.runtimeKey) as? String else {
+            let runtime = aDecoder.decodeObject(forKey: PropertyKey.runtimeKey) as? String ,
+            let isFavorite = aDecoder.decodeBool(forKey: PropertyKey.isFavoriteKey) as? Bool else {
                 return nil
         }
         
-        self.init(unit: unit, showId: showId, showTittle: showTittle, releaseYear: releaseYear, rating: rating, category: category, showCast: showCast, director: director, summary: summary, posterURL: posterURL, mediaType: mediaType, runtime: runtime)
+        self.init(unit: unit, showId: showId, showTittle: showTittle, releaseYear: releaseYear, rating: rating, category: category, showCast: showCast, director: director, summary: summary, posterURL: posterURL, mediaType: mediaType, runtime: runtime, isFavorite: isFavorite)
     }
     
     func encode(with aCoder: NSCoder) {
@@ -86,6 +89,7 @@ class Movie: NSObject, NSCoding {
         aCoder.encode(runtime, forKey: PropertyKey.runtimeKey)
         aCoder.encode(showTittle, forKey: PropertyKey.showTitleKey)
         aCoder.encode(releaseYear, forKey: PropertyKey.releaseYearKey)
+        aCoder.encode(isFavorite, forKey: PropertyKey.isFavoriteKey)
     }
     
     static var DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!

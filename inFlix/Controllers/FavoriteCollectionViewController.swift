@@ -14,9 +14,11 @@ class FavoriteCollectionViewController: UICollectionViewController {
     
     var favoriteMovies = [Movie]()
     
+    var cachedImages = NSCache<NSString, UIImage>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        collectionView?.backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -55,8 +57,28 @@ class FavoriteCollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! FavoriteMovieCollectionViewCell
+        let favoriteMovie = favoriteMovies[indexPath.row]
+        cell.favoriteMovie = favoriteMovie
         
-        cell.favoriteMovie = favoriteMovies[indexPath.row]
+        if let cachedImage = cachedImages.object(forKey: favoriteMovie.posterURL as NSString) {
+            cell.moviePoster.image = cachedImage
+        }else {
+            NetworkManager.sharedInstance().getDataFromUrl(url: URL(string: favoriteMovie.posterURL)!) {
+                networkResult in
+                switch networkResult {
+                case .success(let result):
+                    if let posterImage = UIImage(data: result as! Data) {
+                        cell.moviePoster.image = posterImage
+                    }else {
+                        cell.moviePoster.image = #imageLiteral(resourceName: "noImage")
+                    }
+                case .error(let error):
+                    print(error)
+                    cell.moviePoster.image = #imageLiteral(resourceName: "noImage")
+                }
+            }
+        }
+        cell.moviePoster.contentMode = UIViewContentMode.scaleAspectFill
         cell.delegate = self
         return cell
     }

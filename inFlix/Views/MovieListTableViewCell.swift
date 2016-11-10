@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol MoviesListTableViewCellDelegate: class {
+    func MovieListTableViewCellDidPressButton(_ movieCell: MovieListTableViewCell)
+}
+
 class MovieListTableViewCell: UITableViewCell {
     
     var detailMovie: Movie? {
@@ -20,6 +24,9 @@ class MovieListTableViewCell: UITableViewCell {
     @IBOutlet weak var movieDetail: UILabel!
     @IBOutlet weak var movieImage: UIImageView!
     @IBOutlet weak var movieDirector: UILabel!
+    @IBOutlet weak var favoriteButton: UIButton!
+    
+    weak var delegate: MoviesListTableViewCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -29,11 +36,11 @@ class MovieListTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
     
     func setUpCell() {
+        backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
         if let detailMovie = detailMovie {
             if let movieTittle = movieTittle,
                 let movieDetail = movieDetail,
@@ -41,12 +48,21 @@ class MovieListTableViewCell: UITableViewCell {
                 movieTittle.text = detailMovie.showTittle
                 movieDetail.text = detailMovie.releaseYear
                 movieDirector.text = detailMovie.director
+                movieImage.image = #imageLiteral(resourceName: "noImage")
+                setUpButton()
             }
         }
     }
+    
+    func setUpButton() {
+        favoriteButton.setBackgroundImage(#imageLiteral(resourceName: "whiteHeart"), for: .normal)
+        favoriteButton.setBackgroundImage(#imageLiteral(resourceName: "favoriteBar"), for: .selected)
+        favoriteButton.setBackgroundImage(#imageLiteral(resourceName: "favoriteBar"), for: [.selected, .highlighted])
+        favoriteButton.isSelected = detailMovie?.isFavorite ?? false
+    }
 
     @IBAction func saveFavorite(_ sender: Any) {
-        MoviesService.sharedInstance().addFavoriteMovie(movie: detailMovie!)
+        delegate?.MovieListTableViewCellDidPressButton(self)
     }
     
 }

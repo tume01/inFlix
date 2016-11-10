@@ -39,6 +39,11 @@ class MoviesService {
                 
                 for value in results {
                     if let movie = Movie(json: value) {
+                        let isFavorite = self.favoriteMovies.contains() {
+                            element in
+                            return element.showId == movie.showId
+                        }
+                        movie.isFavorite = isFavorite
                         movies.append(movie)
                     }
                 }
@@ -53,14 +58,17 @@ class MoviesService {
     
     func addFavoriteMovie(movie: Movie) {
         if (!favoriteMovies.contains(movie)) {
+            movie.isFavorite = true
             favoriteMovies.append(movie)
             saveFavoriteMovies()
         }
     }
     
     func removeFavoriteMovie(movie: Movie) {
-        favoriteMovies.remove(at: favoriteMovies.index(of: movie)!)
-        saveFavoriteMovies()
+        if let index = favoriteMovies.index(of: movie) {
+            favoriteMovies.remove(at: index)
+            saveFavoriteMovies()
+        }
     }
     
     func saveFavoriteMovies() {
@@ -86,6 +94,7 @@ extension Movie {
             let runtime = json["runtime"] as? String else {
                 return nil
         }
-        self.init(unit: unit, showId: showID, showTittle: showTittle, releaseYear: releaseYear, rating: rating, category: category, showCast: showCast, director: director, summary: summary, posterURL: posterURL, mediaType: mediaType, runtime: runtime)
+        
+        self.init(unit: unit, showId: showID, showTittle: showTittle, releaseYear: releaseYear, rating: rating, category: category, showCast: showCast, director: director, summary: summary, posterURL: posterURL, mediaType: mediaType, runtime: runtime, isFavorite: false)
     }
 }

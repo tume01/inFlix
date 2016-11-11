@@ -102,7 +102,7 @@
                                     <outlet property="moviePoster" destination="Hsk-o1-6xv" id="s7n-eI-amR"/>
                                     <outlet property="titleText" destination="S7O-eX-b7D" id="IvQ-Mp-UWa"/>
                                     <outlet property="yearLabel" destination="AHz-ie-83e" id="qUc-bm-mRG"/>
-                                    <segue destination="RXb-MO-cAY" kind="show" identifier="showDetailFavorite" id="6Xe-Mz-yTR"/>
+                                    <segue destination="Q3t-Um-9Ze" kind="show" identifier="showDetailFavorite" id="Sr5-on-SIP"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -194,7 +194,7 @@
                                     <outlet property="movieDirector" destination="1Qn-iL-mGf" id="UbM-h3-hJH"/>
                                     <outlet property="movieImage" destination="j9L-5m-SY9" id="pSh-SQ-2hh"/>
                                     <outlet property="movieTittle" destination="UKm-Al-tTO" id="h6B-H3-HmL"/>
-                                    <segue destination="RXb-MO-cAY" kind="show" identifier="showDetail" id="g0c-8N-825"/>
+                                    <segue destination="Q3t-Um-9Ze" kind="show" identifier="showDetail" id="Q5L-qG-Rct"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -228,18 +228,22 @@
                         <viewControllerLayoutGuide type="top" id="Fja-o8-05T"/>
                         <viewControllerLayoutGuide type="bottom" id="93l-TI-ZeL"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="sxq-Vg-PlQ">
+                    <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="sxq-Vg-PlQ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="751"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" bounces="NO" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zOM-vc-qhC">
                                 <rect key="frame" x="0.0" y="64" width="414" height="687"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pr5-ho-IKi">
+                                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pr5-ho-IKi">
                                         <rect key="frame" x="53" y="10" width="307" height="297"/>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="297" id="DIz-lL-GMP"/>
                                         </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="uVf-P8-pa0" appends="YES" id="vuy-vK-bz6"/>
+                                        </connections>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="748" text="Title Text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SmY-kR-Zos">
                                         <rect key="frame" x="10" y="346" width="396" height="20"/>
@@ -385,6 +389,12 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kz8-sh-ZIW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="uVf-P8-pa0">
+                    <connections>
+                        <action selector="handleTapPoster:" destination="Q3t-Um-9Ze" id="46a-8b-DD4"/>
+                        <segue destination="bSI-CV-qzO" kind="show" identifier="showPoster" id="8QO-Je-94n"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3686.25" y="339.08450704225351"/>
         </scene>
@@ -396,27 +406,43 @@
                         <viewControllerLayoutGuide type="top" id="i9h-Eg-fRK"/>
                         <viewControllerLayoutGuide type="bottom" id="wmV-Sw-6J5"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="foc-eB-IH8">
+                    <view key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="foc-eB-IH8">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" maximumZoomScale="2" translatesAutoresizingMaskIntoConstraints="NO" id="iMs-oB-Uhu">
-                                <rect key="frame" x="16" y="0.0" width="304" height="568"/>
-                            </scrollView>
+                            <imageView multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="noImage" translatesAutoresizingMaskIntoConstraints="NO" id="PSU-ze-Mp2">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="dEL-vm-EeM" appends="YES" id="scC-nZ-wlc"/>
+                                    <outletCollection property="gestureRecognizers" destination="unD-O2-CWs" appends="YES" id="TL9-G4-mvP"/>
+                                    <outletCollection property="gestureRecognizers" destination="O70-xn-PLQ" appends="YES" id="Kik-fr-L2K"/>
+                                </connections>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="iMs-oB-Uhu" secondAttribute="trailing" id="1eK-4V-vmS"/>
-                            <constraint firstItem="iMs-oB-Uhu" firstAttribute="top" secondItem="foc-eB-IH8" secondAttribute="top" id="3Dv-hr-mVj"/>
-                            <constraint firstItem="iMs-oB-Uhu" firstAttribute="leading" secondItem="foc-eB-IH8" secondAttribute="leadingMargin" id="7rS-VB-vO8"/>
-                            <constraint firstItem="iMs-oB-Uhu" firstAttribute="bottom" secondItem="wmV-Sw-6J5" secondAttribute="top" id="l9z-Vb-Ua5"/>
-                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="scrollView" destination="iMs-oB-Uhu" id="pIv-rf-jsc"/>
+                        <outlet property="posterImageView" destination="PSU-ze-Mp2" id="jgM-Ur-AgZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9hd-23-Wed" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <rotationGestureRecognizer id="dEL-vm-EeM">
+                    <connections>
+                        <action selector="handleRotate:" destination="bSI-CV-qzO" id="s5V-Ph-bsy"/>
+                    </connections>
+                </rotationGestureRecognizer>
+                <pinchGestureRecognizer id="unD-O2-CWs">
+                    <connections>
+                        <action selector="handlePinch:" destination="bSI-CV-qzO" id="7Sx-I0-iCo"/>
+                    </connections>
+                </pinchGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="O70-xn-PLQ">
+                    <connections>
+                        <action selector="handlePan:" destination="bSI-CV-qzO" id="JDz-0S-ubS"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="5066.25" y="276.76056338028167"/>
         </scene>
@@ -468,26 +494,11 @@
             </objects>
             <point key="canvasLocation" x="555.07246376811599" y="650.54347826086962"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="7Iv-77-uOl">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="RXb-MO-cAY" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gK1-89-OAm">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Q3t-Um-9Ze" kind="relationship" relationship="rootViewController" id="htL-84-ICp"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1pu-zY-PtU" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2688.75" y="339.08450704225351"/>
-        </scene>
     </scenes>
+    <resources>
+        <image name="noImage" width="320" height="320"/>
+    </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="g0c-8N-825"/>
+        <segue reference="Q5L-qG-Rct"/>
     </inferredMetricsTieBreakers>
 </document>

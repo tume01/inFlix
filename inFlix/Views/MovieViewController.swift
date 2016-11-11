@@ -67,6 +67,19 @@ class MovieViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func handleTapPoster(_ sender: UITapGestureRecognizer) {
+        performSegue(withIdentifier: "showPoster", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showPoster" {
+            if let posterViewController = segue.destination as? PosterViewController {
+                posterViewController.posterImage = moviePoster.image
+                posterViewController.navigationItem.leftItemsSupplementBackButton = true
+            }
+        }
+    }
+
 
     /*
     // MARK: - Navigation

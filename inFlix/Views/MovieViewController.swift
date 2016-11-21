@@ -17,6 +17,8 @@ class MovieViewController: UIViewController {
     @IBOutlet weak var castLabel: UILabel!
     @IBOutlet weak var category: UILabel!
     @IBOutlet weak var ratingLabel: UILabel!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var containerView: UIImageView!
     
     var detailMovie: Movie? {
         didSet {
@@ -26,6 +28,8 @@ class MovieViewController: UIViewController {
     
     func setupView() {
         self.view.backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
+        containerView.backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
+        scrollView.backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
         if let detailMovie = self.detailMovie {
             if let titleLabel = titleLabel,
                 let directorLabel = directorLabel,

@@ -116,3 +116,11 @@ extension FavoriteCollectionViewController {
         }
     }
 }
+
+extension FavoriteCollectionViewController: ScrollableToTopView {
+    func scrollToTop() {
+        if isViewLoaded && (view.window != nil) {
+            collectionView?.setContentOffset(CGPoint(x: 0, y: -topLayoutGuide.length), animated: true)
+        }
+    }
+}

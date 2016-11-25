@@ -11,14 +11,17 @@ import UIKit
 class MovieViewController: UIViewController {
     
     @IBOutlet weak var moviePoster: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var directorLabel: UILabel!
     @IBOutlet weak var yearLabel: UILabel!
     @IBOutlet weak var castLabel: UILabel!
     @IBOutlet weak var category: UILabel!
     @IBOutlet weak var ratingLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var containerView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var gradientView: UIView!
+    @IBOutlet weak var summaryText: UILabel!
+
     
     var detailMovie: Movie? {
         didSet {
@@ -31,14 +34,16 @@ class MovieViewController: UIViewController {
         containerView.backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
         scrollView.backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
         if let detailMovie = self.detailMovie {
-            if let titleLabel = titleLabel,
-                let directorLabel = directorLabel,
+            if let directorLabel = directorLabel,
+                let titleLabel = titleLabel,
                 let yearLabel = yearLabel,
                 let castLabel = castLabel,
                 let category = category,
                 let ratingLabel = ratingLabel,
-                let moviePoster = moviePoster{
+                let moviePoster = moviePoster,
+                let summaryText = summaryText {
                 
+                summaryText.text = detailMovie.summary
                 titleLabel.text = detailMovie.showTittle
                 directorLabel.text = detailMovie.director
                 yearLabel.text = detailMovie.releaseYear

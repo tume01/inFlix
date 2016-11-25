@@ -78,6 +78,8 @@ class FavoriteCollectionViewController: UICollectionViewController {
                 }
             }
         }
+        cell.layer.masksToBounds = true;
+        cell.layer.cornerRadius = 6;
         cell.moviePoster.contentMode = UIViewContentMode.scaleAspectFill
         cell.delegate = self
         return cell
@@ -91,7 +93,7 @@ class FavoriteCollectionViewController: UICollectionViewController {
 
 extension FavoriteCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (collectionView.frame.size.width / 2) - 10, height: 300)    }
+        return CGSize(width: (collectionView.frame.size.width / 2) - 20, height: 280)    }
 }
 
 extension FavoriteCollectionViewController: FavoriteMovieCollectionViewCellDelegate {

@@ -17,7 +17,7 @@ class MoviesListTableViewController: UITableViewController {
     
     let backgroundColor = UIColor(red:0.20, green:0.20, blue:0.20, alpha:1.0)
     let tintColor = UIColor(red:0.73, green:0.04, blue:0.04, alpha:1.0)
-    let searchController = UISearchController(searchResultsController: nil)
+    let searchController = CustomUISearchController(searchResultsController: nil)
     var filteredMovies = [Movie]()
     let filters = [
         Filter.actor.rawValue,
@@ -39,8 +39,7 @@ class MoviesListTableViewController: UITableViewController {
     
     func setUpView() {
         self.tableView.backgroundColor = backgroundColor
-        tableView.backgroundView?.backgroundColor = backgroundColor
-        tableView.headerView(forSection: 0)?.backgroundColor = backgroundColor
+        tableView.backgroundView = UIView()
     }
     
     func setUpActivityIndicator() {
@@ -60,6 +59,9 @@ class MoviesListTableViewController: UITableViewController {
         tableView.tableHeaderView = searchController.searchBar
         tableView.backgroundView?.backgroundColor = backgroundColor
         tableView.headerView(forSection: 0)?.backgroundColor = backgroundColor
+        
+        searchController.definesPresentationContext = true
+        searchController.extendedLayoutIncludesOpaqueBars = true
         
         searchController.searchBar.scopeButtonTitles = filters
         searchController.searchBar.barTintColor = backgroundColor
@@ -91,31 +93,30 @@ class MoviesListTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieListaTableViewCell", for: indexPath) as! MovieListTableViewCell
 
         let movie: Movie
-        if searchController.isActive && searchController.searchBar.text != "" {
-            movie = filteredMovies[indexPath.row]
-            cell.detailMovie = movie
-            cell.delegate = self
-            
-            if let cachedImage = cachedImages.object(forKey: movie.posterURL as NSString) {
-                cell.movieImage.image = cachedImage
-            }else {
-                NetworkManager.sharedInstance().getDataFromUrl(url: URL(string: movie.posterURL)!) {
-                    networkResult in
-                    switch networkResult {
-                    case .success(let result):
-                        if let posterImage = UIImage(data: result as! Data) {
+        movie = filteredMovies[indexPath.row]
+        cell.detailMovie = movie
+        cell.delegate = self
+        
+        if let cachedImage = cachedImages.object(forKey: movie.posterURL as NSString) {
+            cell.movieImage.image = cachedImage
+        }else {
+            NetworkManager.sharedInstance().getDataFromUrl(url: URL(string: movie.posterURL)!) {
+                networkResult in
+                switch networkResult {
+                case .success(let result):
+                    if let posterImage = UIImage(data: result as! Data) {
+                        if(movie.posterURL == cell.detailMovie?.posterURL) {
                             cell.movieImage.image = posterImage
-                            self.cachedImages.setObject(posterImage, forKey: movie.posterURL as NSString)
-                        }else {
-                            cell.movieImage.image = #imageLiteral(resourceName: "noImage")
                         }
-                    case .error(let error):
-                        print(error)
+                        self.cachedImages.setObject(posterImage, forKey: movie.posterURL as NSString)
+                    }else {
                         cell.movieImage.image = #imageLiteral(resourceName: "noImage")
                     }
+                case .error(let error):
+                    print(error)
+                    cell.movieImage.image = #imageLiteral(resourceName: "noImage")
                 }
             }
-            
         }
         cell.movieImage.contentMode = UIViewContentMode.scaleAspectFill
         return cell
@@ -165,7 +166,7 @@ extension MoviesListTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
         let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
-        if(searchBar.text != "") {
+        if(searchBar.text != "" && (searchBar.text?.characters.count)! >= 5) {
             filterContentForSearchText(searchText: searchController.searchBar.text!, scope: scope)
         }
     }
@@ -222,5 +223,11 @@ extension MoviesListTableViewController: ScrollableToTopView {
         if isViewLoaded && (view.window != nil) {
             tableView.setContentOffset(CGPoint(x: 0, y: -topLayoutGuide.length), animated: true)
         }
+    }
+}
+
+class CustomUISearchController: UISearchController {
+    override open var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 }

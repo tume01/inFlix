@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		750558C01DE74C3E005F73F2 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750558BF1DE74C3E005F73F2 /* GradientView.swift */; };
 		7512ABAB1DD50C4D004335CC /* PosterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7512ABAA1DD50C4D004335CC /* PosterViewController.swift */; };
 		753010851DD251E5008B66FB /* FavoriteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753010841DD251E5008B66FB /* FavoriteCollectionViewController.swift */; };
 		753010871DD2534C008B66FB /* FavoriteMovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753010861DD2534C008B66FB /* FavoriteMovieCollectionViewCell.swift */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		750558BF1DE74C3E005F73F2 /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		7512ABAA1DD50C4D004335CC /* PosterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PosterViewController.swift; sourceTree = "<group>"; };
 		753010841DD251E5008B66FB /* FavoriteCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteCollectionViewController.swift; sourceTree = "<group>"; };
 		753010861DD2534C008B66FB /* FavoriteMovieCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteMovieCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 				75EDB9AA1DCCD86200021B13 /* SearchBar.xib */,
 				75EDB9B01DCCF15700021B13 /* MovieListTableViewCell.swift */,
 				753010861DD2534C008B66FB /* FavoriteMovieCollectionViewCell.swift */,
+				750558BF1DE74C3E005F73F2 /* GradientView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 				75EDB9B81DCD085700021B13 /* Configuration.swift in Sources */,
 				75EDB9921DCCD29100021B13 /* ViewController.swift in Sources */,
 				75EDB9BA1DCD085700021B13 /* JSONParser.swift in Sources */,
+				750558C01DE74C3E005F73F2 /* GradientView.swift in Sources */,
 				753010871DD2534C008B66FB /* FavoriteMovieCollectionViewCell.swift in Sources */,
 				75EDB9AD1DCCECB600021B13 /* MoviesListTableViewController.swift in Sources */,
 				75EDB9B91DCD085700021B13 /* ErrorCode.swift in Sources */,
